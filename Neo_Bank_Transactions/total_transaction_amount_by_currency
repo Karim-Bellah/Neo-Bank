@@ -1,0 +1,3 @@
+SELECT transactions_currency, SUM(amount_usd) AS total_amount_usd
+FROM `my-project-study-393315.neo_bank.transaction_cleaned`
+GROUP BY transactions_currency

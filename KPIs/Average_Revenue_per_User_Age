@@ -1,0 +1,25 @@
+WITH user_ages AS (
+  SELECT
+    u.user_id,
+    u.birth_year,
+    EXTRACT(YEAR FROM u.created_date) - u.birth_year AS age,
+    t.amount_usd
+  FROM
+    `my-project-study-393315.neo_bank.users` AS u
+  JOIN
+    `my-project-study-393315.neo_bank.transactions` AS t
+  ON
+    u.user_id = t.user_id
+)
+SELECT
+  FLOOR(age / 10) * 10 AS age_range_start,
+  FLOOR(age / 10) * 10 + 9 AS age_range_end,
+  SUM(amount_usd) AS total_revenue,
+  COUNT(DISTINCT user_id) AS total_users,
+  SUM(amount_usd) / COUNT(DISTINCT user_id) AS arpu
+FROM
+  user_ages
+GROUP BY
+  age_range_start, age_range_end
+ORDER BY
+  age_range_start;

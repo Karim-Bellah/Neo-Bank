@@ -1,0 +1,7 @@
+SELECT
+  plan,
+  SUM(user_settings_crypto_unlocked) AS crypto_unlocked_count
+FROM
+  my-project-study-393315.neo_bank.users_cleaned
+GROUP BY
+  plan;

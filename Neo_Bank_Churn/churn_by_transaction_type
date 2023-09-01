@@ -1,0 +1,37 @@
+WITH LastPurchaseDates AS (
+    SELECT
+        user_id,
+        MAX(Date) AS last_purchase_date
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    GROUP BY
+        user_id
+),
+
+ChurnedUsers AS (
+    SELECT DISTINCT
+        uc.user_id
+    FROM
+        my-project-study-393315.neo_bank.users_cleaned uc
+    LEFT JOIN
+        LastPurchaseDates lp
+    ON
+        uc.user_id = lp.user_id
+    WHERE
+        DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) > 4
+)
+
+SELECT
+    tc.transactions_type,
+    COUNT(tc.transactions_type) AS transaction_type_count,
+    ROUND(COUNT(tc.transactions_type) / SUM(COUNT(tc.transactions_type)) OVER(), 2) AS distribution_percentage
+FROM
+    ChurnedUsers cu
+LEFT JOIN
+    my-project-study-393315.neo_bank.transaction_cleaned tc
+ON
+    cu.user_id = tc.user_id
+GROUP BY
+    tc.transactions_type
+ORDER BY
+    tc.transactions_type;

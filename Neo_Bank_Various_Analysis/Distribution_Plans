@@ -1,0 +1,9 @@
+SELECT
+    plan,
+    COUNT(*) AS plan_count
+FROM
+    my-project-study-393315.neo_bank.users_cleaned
+GROUP BY
+    plan
+ORDER BY
+    plan_count DESC;

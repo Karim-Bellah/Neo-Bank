@@ -1,0 +1,23 @@
+WITH MonthTransactionCounts AS (
+    SELECT
+        EXTRACT(YEAR FROM Date) AS year,
+        EXTRACT(MONTH FROM Date) AS month,
+        COUNT(*) AS transaction_count
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    WHERE
+        (EXTRACT(YEAR FROM Date) = 2018 AND EXTRACT(MONTH FROM Date) >= 1)
+        OR (EXTRACT(YEAR FROM Date) > 2018 AND EXTRACT(YEAR FROM Date) < 2019)
+        OR (EXTRACT(YEAR FROM Date) = 2019 AND EXTRACT(MONTH FROM Date) <= 5)
+    GROUP BY
+        year, month
+)
+
+SELECT
+    year,
+    month,
+    transaction_count
+FROM
+    MonthTransactionCounts
+ORDER BY
+    year, month;

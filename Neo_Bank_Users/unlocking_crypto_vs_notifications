@@ -1,0 +1,8 @@
+SELECT
+  user_settings_crypto_unlocked,
+  AVG(attributes_notifications_marketing_push) AS avg_push_notifications,
+  AVG(attributes_notifications_marketing_email) AS avg_email_notifications
+FROM
+  my-project-study-393315.neo_bank.users_cleaned
+GROUP BY
+  user_settings_crypto_unlocked;

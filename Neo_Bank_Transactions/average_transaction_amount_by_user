@@ -1,0 +1,10 @@
+SELECT 
+  user_id,
+  transactions_state, 
+  AVG(ROUND(amount_usd,1)) AS avg_amount_usd
+FROM `my-project-study-393315.neo_bank.transaction_cleaned`
+WHERE transactions_state = "COMPLETED"
+GROUP BY 
+  user_id,
+  transactions_state
+ORDER BY avg_amount_usd DESC

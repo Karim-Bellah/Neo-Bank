@@ -1,0 +1,11 @@
+SELECT
+  EXTRACT(YEAR FROM created_date) AS year,
+  EXTRACT(MONTH FROM created_date) AS month,
+  COUNT(*) AS new_users,
+  AVG(num_contacts) AS avg_contacts
+FROM
+  my-project-study-393315.neo_bank.users_cleaned
+GROUP BY
+  year, month
+ORDER BY
+  year, month;

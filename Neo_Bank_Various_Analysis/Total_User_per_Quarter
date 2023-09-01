@@ -1,0 +1,28 @@
+WITH QuarterUsers AS (
+    SELECT
+        DISTINCT user_id,
+        EXTRACT(YEAR FROM Date) AS year,
+        CASE
+            WHEN EXTRACT(MONTH FROM Date) BETWEEN 1 AND 3 THEN 1
+            WHEN EXTRACT(MONTH FROM Date) BETWEEN 4 AND 6 THEN 2
+            WHEN EXTRACT(MONTH FROM Date) BETWEEN 7 AND 9 THEN 3
+            WHEN EXTRACT(MONTH FROM Date) BETWEEN 10 AND 12 THEN 4
+        END AS quarter
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    WHERE
+        (EXTRACT(YEAR FROM Date) = 2018 AND EXTRACT(MONTH FROM Date) >= 1)
+        OR (EXTRACT(YEAR FROM Date) > 2018 AND EXTRACT(YEAR FROM Date) < 2019)
+        OR (EXTRACT(YEAR FROM Date) = 2019 AND EXTRACT(MONTH FROM Date) <= 5)
+)
+
+SELECT
+    year,
+    quarter,
+    COUNT(DISTINCT user_id) AS total_users
+FROM
+    QuarterUsers
+GROUP BY
+    year, quarter
+ORDER BY
+    year, quarter;

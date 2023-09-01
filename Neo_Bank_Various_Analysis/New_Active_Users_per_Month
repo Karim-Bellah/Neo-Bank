@@ -1,0 +1,29 @@
+WITH ActiveUsersPerMonth AS (
+    SELECT
+        t.user_id,
+        EXTRACT(YEAR FROM t.Date) AS year,
+        EXTRACT(MONTH FROM t.Date) AS month,
+        SUM(t.amount_usd) AS total_amount
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned t
+    WHERE
+        (EXTRACT(YEAR FROM t.Date) = 2018 AND EXTRACT(MONTH FROM t.Date) >= 1)
+        OR (EXTRACT(YEAR FROM t.Date) > 2018 AND EXTRACT(YEAR FROM t.Date) < 2019)
+        OR (EXTRACT(YEAR FROM t.Date) = 2019 AND EXTRACT(MONTH FROM t.Date) <= 5)
+    GROUP BY
+        user_id, year, month
+    HAVING
+        total_amount > 0
+)
+
+SELECT
+    year,
+    month,
+    COUNT(DISTINCT user_id) AS active_users_count,
+    SUM(total_amount) AS total_amount
+FROM
+    ActiveUsersPerMonth
+GROUP BY
+    year, month
+ORDER BY
+    year, month;

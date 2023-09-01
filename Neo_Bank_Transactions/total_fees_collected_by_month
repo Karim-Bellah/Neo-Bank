@@ -1,0 +1,5 @@
+SELECT EXTRACT(YEAR FROM Date) AS year, EXTRACT(MONTH FROM Date) AS month, SUM(amount_usd) AS total_fees
+FROM `my-project-study-393315.neo_bank.transaction_cleaned`
+WHERE transactions_type = 'FEE' AND transactions_state = 'COMPLETED'
+GROUP BY year, month
+ORDER BY year, month

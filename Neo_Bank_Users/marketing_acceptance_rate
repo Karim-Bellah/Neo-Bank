@@ -1,0 +1,5 @@
+SELECT
+  AVG(attributes_notifications_marketing_push) AS push_acceptance_rate,
+  AVG(attributes_notifications_marketing_email) AS email_acceptance_rate
+FROM
+  my-project-study-393315.neo_bank.users_cleaned;

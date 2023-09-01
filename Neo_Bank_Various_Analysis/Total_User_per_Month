@@ -1,0 +1,23 @@
+WITH MonthUsers AS (
+    SELECT
+        DISTINCT user_id,
+        EXTRACT(YEAR FROM Date) AS year,
+        EXTRACT(MONTH FROM Date) AS month
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    WHERE
+        (EXTRACT(YEAR FROM Date) = 2018 AND EXTRACT(MONTH FROM Date) >= 1)
+        OR (EXTRACT(YEAR FROM Date) > 2018 AND EXTRACT(YEAR FROM Date) < 2019)
+        OR (EXTRACT(YEAR FROM Date) = 2019 AND EXTRACT(MONTH FROM Date) <= 5)
+)
+
+SELECT
+    year,
+    month,
+    COUNT(DISTINCT user_id) AS total_users
+FROM
+    MonthUsers
+GROUP BY
+    year, month
+ORDER BY
+    year, month;

@@ -1,0 +1,23 @@
+WITH LastPurchaseDates AS (
+    SELECT
+        user_id,
+        MAX(Date) AS last_purchase_date
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    GROUP BY
+        user_id
+)
+
+SELECT
+    FORMAT_DATE('%Y-%m', lp.last_purchase_date) AS churn_month,
+    COUNT(DISTINCT CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) > 4 THEN uc.user_id END) AS churned_users
+FROM
+    my-project-study-393315.neo_bank.users_cleaned uc
+LEFT JOIN
+    LastPurchaseDates lp
+ON
+    uc.user_id = lp.user_id
+GROUP BY
+    churn_month
+ORDER BY
+    churn_month;
