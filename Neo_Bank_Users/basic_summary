@@ -1,0 +1,8 @@
+SELECT
+  COUNT(*) AS total_users,
+  MIN(birth_year) AS min_birth_year,
+  MAX(birth_year) AS max_birth_year,
+  MIN(created_date) AS min_created_date,
+  MAX(created_date) AS max_created_date
+FROM
+  my-project-study-393315.neo_bank.users_cleaned;

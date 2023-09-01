@@ -1,0 +1,30 @@
+WITH InitialMonthUsers AS (
+    SELECT
+        DISTINCT user_id
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    WHERE
+        EXTRACT(MONTH FROM Date) = 1 AND
+        EXTRACT(YEAR FROM Date) = 2018
+),
+
+SubsequentMonthUsers AS (
+    SELECT
+        DISTINCT user_id
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    WHERE
+        EXTRACT(MONTH FROM Date) = 2 AND
+        EXTRACT(YEAR FROM Date) = 2018
+)
+
+SELECT
+    COUNT(DISTINCT smu.user_id) AS retained_users,
+    COUNT(DISTINCT imu.user_id) AS initial_users,
+    SAFE_DIVIDE(COUNT(DISTINCT smu.user_id), COUNT(DISTINCT imu.user_id)) AS retention_rate
+FROM
+    SubsequentMonthUsers smu
+JOIN
+    InitialMonthUsers imu
+ON
+    smu.user_id = imu.user_id;

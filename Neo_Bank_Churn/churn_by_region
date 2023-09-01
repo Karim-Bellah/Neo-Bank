@@ -1,0 +1,41 @@
+WITH LastPurchaseDates AS (
+    SELECT
+        user_id,
+        MAX(Date) AS last_purchase_date
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    GROUP BY
+        user_id
+),
+
+ChurnedUsers AS (
+    SELECT DISTINCT
+        uc.user_id,
+        uc.country
+    FROM
+        my-project-study-393315.neo_bank.users_cleaned uc
+    LEFT JOIN
+        LastPurchaseDates lp
+    ON
+        uc.user_id = lp.user_id
+    WHERE
+        DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) > 4
+),
+
+TotalChurnedUsers AS (
+    SELECT COUNT(DISTINCT user_id) AS total_churned_users
+    FROM ChurnedUsers
+)
+
+SELECT
+    cu.country,
+    COUNT(cu.user_id) AS churned_user_count,
+    ROUND(COUNT(cu.user_id) / tcu.total_churned_users * 100, 2) AS churned_user_percentage
+FROM
+    ChurnedUsers cu
+CROSS JOIN
+    TotalChurnedUsers tcu
+GROUP BY
+    cu.country, tcu.total_churned_users
+ORDER BY
+    churned_user_count DESC;

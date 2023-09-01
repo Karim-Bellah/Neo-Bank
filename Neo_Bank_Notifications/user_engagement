@@ -1,0 +1,4 @@
+SELECT user_id, COUNT(*) AS notification_count
+FROM `my-project-study-393315.neo_bank.notifications_cleaned`
+GROUP BY user_id
+ORDER BY notification_count DESC;

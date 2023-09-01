@@ -1,0 +1,10 @@
+WITH TopReasons AS (
+  SELECT channel, reason, COUNT(*) AS notification_count,
+         ROW_NUMBER() OVER (PARTITION BY channel ORDER BY COUNT(*) DESC) AS rn
+  FROM `my-project-study-393315.neo_bank.notifications_cleaned`
+  GROUP BY channel, reason
+)
+SELECT channel, reason, notification_count
+FROM TopReasons
+WHERE rn = 1
+ORDER BY channel;

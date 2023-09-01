@@ -1,0 +1,9 @@
+SELECT
+    transactions_type,
+    COUNT(*) AS transaction_type_count
+FROM
+    my-project-study-393315.neo_bank.transaction_cleaned
+GROUP BY
+    transactions_type
+ORDER BY
+    transaction_type_count DESC;

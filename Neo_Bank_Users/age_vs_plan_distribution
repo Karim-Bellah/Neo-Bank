@@ -1,0 +1,15 @@
+SELECT
+  CASE
+    WHEN birth_year >= 1997 THEN 'Gen Z'
+    WHEN birth_year >= 1981 AND birth_year <= 1996 THEN 'Millennial'
+    WHEN birth_year >= 1965 AND birth_year <= 1980 THEN 'Generation X'
+    ELSE 'Baby Boomer or earlier'
+  END AS generation,
+  plan,
+  COUNT(*) AS users_count
+FROM
+  my-project-study-393315.neo_bank.users_cleaned
+GROUP BY
+  generation, plan
+ORDER BY
+  generation, plan;

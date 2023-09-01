@@ -1,0 +1,20 @@
+WITH LastPurchaseDates AS (
+    SELECT
+        user_id,
+        MAX(Date) AS last_purchase_date
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    GROUP BY
+        user_id
+)
+
+SELECT
+    SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, DAY) > 120 THEN 1 ELSE 0 END) AS churned_users,
+    COUNT(DISTINCT uc.user_id) AS total_users,
+    SAFE_DIVIDE(SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, DAY) > 120 THEN 1 ELSE 0 END), COUNT(DISTINCT uc.user_id)) AS churn_rate
+FROM
+    my-project-study-393315.neo_bank.users_cleaned uc
+LEFT JOIN
+    LastPurchaseDates lp
+ON
+    uc.user_id = lp.user_id;

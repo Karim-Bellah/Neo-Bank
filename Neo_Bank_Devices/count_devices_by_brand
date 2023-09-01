@@ -1,0 +1,4 @@
+SELECT brand, COUNT(*) AS device_count
+FROM `my-project-study-393315.neo_bank.devices_cleaned`
+GROUP BY brand
+ORDER BY device_count DESC;

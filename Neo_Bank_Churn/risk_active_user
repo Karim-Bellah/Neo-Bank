@@ -1,0 +1,24 @@
+WITH LastPurchaseDates AS (
+    SELECT
+        user_id,
+        MAX(Date) AS last_purchase_date
+    FROM
+        my-project-study-393315.neo_bank.transaction_cleaned
+    GROUP BY
+        user_id
+)
+
+SELECT
+    SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) = 0 THEN 1 ELSE 0 END) AS active_users,
+    SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) BETWEEN 2 AND 4 THEN 1 ELSE 0 END) AS at_risk_users,
+    SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) > 4 THEN 1 ELSE 0 END) AS churned_users,
+    COUNT(DISTINCT uc.user_id) AS total_users,
+    ROUND(SAFE_DIVIDE(SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) = 0 THEN 1 ELSE 0 END), COUNT(DISTINCT uc.user_id)) * 100, 2) AS active_percentage,
+    ROUND(SAFE_DIVIDE(SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) BETWEEN 2 AND 4 THEN 1 ELSE 0 END), COUNT(DISTINCT uc.user_id)) * 100, 2) AS at_risk_percentage,
+    ROUND(SAFE_DIVIDE(SUM(CASE WHEN DATE_DIFF(DATE(2019, 05, 16), lp.last_purchase_date, MONTH) > 4 THEN 1 ELSE 0 END), COUNT(DISTINCT uc.user_id)) * 100, 2) AS churned_percentage
+FROM
+    my-project-study-393315.neo_bank.users_cleaned uc
+LEFT JOIN
+    LastPurchaseDates lp
+ON
+    uc.user_id = lp.user_id;

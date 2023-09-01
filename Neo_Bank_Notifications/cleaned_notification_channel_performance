@@ -1,0 +1,4 @@
+SELECT channel, status, COUNT(*) AS notification_count
+FROM `my-project-study-393315.neo_bank.notifications_cleaned`
+GROUP BY channel, status
+ORDER BY notification_count DESC;
